@@ -1,21 +1,25 @@
-const express = require('express')
+import express from 'express';
+
+import contactsController from '../../controllers/contacts.js';
+import isEmptyBody from '../../middlewares/isEmptyBody.js';
+import isValidId from '../../middlewares/isValidId.js';
+import validateBody from '../../decorators/validateBody.js';
+import { contactAddSchema, contactUpdateSchema, favoriteUpdateSchema } from '../../models/Contact.js';
+import isEmptyFavorite from '../../middlewares/isEmptyFavorite.js';
+
 
 const router = express.Router()
 
-const ctrl = require('../../controllers/contacts')
+router.get('/', contactsController.getAll);
 
-const {validateBody} = require('../../middlewares')
+router.get('/:contactId', isValidId, contactsController.getById);
 
-const schemas = require('../../schemas/contacts')
+router.post('/', isEmptyBody, validateBody(contactAddSchema), contactsController.addNew);
 
-router.get('/', ctrl.getAll )
+router.delete('/:contactId', isValidId, contactsController.deleteById);
 
-router.get('/:id', ctrl.getById)
+router.put('/:contactId', isValidId, isEmptyBody, validateBody(contactUpdateSchema), contactsController.updateById);
 
-router.post('/', validateBody(schemas.addSchema), ctrl.add)
+router.patch('/:contactId/favorite', isValidId, isEmptyFavorite, validateBody(favoriteUpdateSchema), contactsController.updateStatusContact);
 
-router.delete('/:id', ctrl.delById)
-
-router.put('/:id', validateBody(schemas.addSchema), ctrl.updateById)
-
-module.exports = router
+export default router;
