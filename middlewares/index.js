@@ -1,3 +1,9 @@
-export { default as isEmptyBody } from './isEmptyBody.js';
-export { default as isEmptyFavorite } from './isEmptyFavorite.js';
-export { default as isValidId } from './isValidId.js';
+import validateBody from './validateBody.js';
+import isValidId from './isValidId.js';
+import authenticate from './authenticate.js';
+
+export default {
+  validateBody,
+  isValidId,
+  authenticate,
+};

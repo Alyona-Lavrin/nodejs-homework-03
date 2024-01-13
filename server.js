@@ -1,15 +1,17 @@
-import mongoose from 'mongoose';
-import app from './app.js';
+import listen from './app.js';
+import { set, connect } from 'mongoose';
 
-const { DB_HOST, PORT } = process.env;
+const { DB_HOST } = process.env;
 
-mongoose.connect(DB_HOST)
+set('strictQuery', true);
+
+connect(DB_HOST)
   .then(() => {
-    app.listen(PORT, () => {
-      console.log("Database connection successful");
-    })
+    listen(3000, () => {
+      console.log('Database connection successful');
+    });
   })
-  .catch((error) => {
-    console.log(error.message);
+  .catch(error => {
+    console.log(error.messege);
     process.exit(1);
-  })
+  });

@@ -1,6 +1,6 @@
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
-import Contact from '../models/Contact.js';
+import Contact from '../models/contact.js';
 
 const getAll = async (req, res) => {
     const result = await Contact.find({});
