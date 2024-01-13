@@ -1,27 +1,38 @@
-import pkg from 'jsonwebtoken';
-import User from '../models/user.js';
-import HttpError from '../helpers/HttpError.js';
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { HttpErr } from "../helpers/HttpErr.js";
+import UserModel from "../models/contacts/User.js";
 
-const { verify } = pkg;
-const { SECRET_KEY } = process.env;
+dotenv.config();
 
-const authenticate = async (req, _, next) => {
-  const { authorization = '' } = req.headers;
-  const [bearer, token] = authorization.split(' ');
-  if (bearer !== 'Bearer') {
-    next(HttpError(401, `Not authorized!`));
+const { JWT_SECRET } = process.env;
+
+export const authenticate = async (req, res, next) => {
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return next(HttpErr(401, "Not authorized"));
   }
+
+  const [bearer, token] = authorization.split(" ");
+
+  if (bearer !== "Bearer") {
+    return next(HttpErr(401, "Not authorized"));
+  }
+
   try {
-    const { id } = verify(token, SECRET_KEY);
-    const user = await User.findById(id);
-    if (!user) {
-      next(HttpError(404, 'Not found!'));
+    const { id } = jwt.verify(token, JWT_SECRET);
+
+    const user = await UserModel.findById(id);
+
+    if (!user || !user.token || token !== user.token) {
+      return next(HttpErr(401, "Not authorized"));
     }
+
     req.user = user;
+
     next();
-  } catch {
-    next(HttpError(401, 'Not authorized!'));
+  } catch (error) {
+    next(HttpErr(401, "Not authorized"));
   }
 };
-
-export default authenticate;
