@@ -5,7 +5,7 @@ import {
   isEmptyBody,
   isValidId,
   upload,
-} from "../../middleWares/index.js";
+} from "../../middlewares/index.js";
 
 import { validateBody } from "../../decorators/validateBody.js";
 
