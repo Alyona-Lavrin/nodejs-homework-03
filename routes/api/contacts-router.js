@@ -7,7 +7,7 @@ import {
   authenticate,
   isEmptyBody,
   isValidId,
-} from "../../middleWares/index.js";
+} from "../../middlewares/index.js";
 
 import {
   contactAddScheme,
